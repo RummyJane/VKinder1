@@ -1,1 +1,1 @@
-psycopg2 == 2.9.5, SQLAlchemy, vk-api
+psycopg2 == 2.9.5, vk-api == 11.9.9, requests 2.28.1, python-time 0.3.0
