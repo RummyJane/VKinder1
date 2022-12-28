@@ -14,9 +14,16 @@ def get_user_data(user_id):
             'access_token': access_token,
             'v': '5.131', 'fields': 'domain, bdate, city, relation, sex'
             }
-
-    res = requests.get(URL, params=params)
-    response = res.json()
+    try:
+        res = requests.get(URL, params=params)
+        res.raise_for_status()
+    except Exception as e:
+        return e
+    
+    if res.status_code == 200:
+        response = res.json()
+    else:
+        time.sleep(5)
     
     username = response['response'][0]['first_name'] + ' ' + response['response'][0]['last_name'] 
     bdate = response['response'][0]['bdate']
@@ -49,13 +56,16 @@ def search_users(gender_profile, age_profile, city_profile, relation_profile):
 
     try:
         res = requests.get(URL, params=params)
-        response = res.json()
-
+        res.raise_for_status()
     except Exception as e:
-        print(f'Ошибка запроса: {e}')
-        raise SystemExit()
-    time.sleep(5)
+        return e
     
+    if res.status_code == 200:
+        response = res.json()
+    else:
+        time.sleep(5)
+        print('Ошибка')
+        
     res = requests.get(URL, params=params)
     response = res.json()
     ids_of_users = response['response']['items']
@@ -79,7 +89,16 @@ def get_photos(id_profile):
             'extended': 1
             }
 
-    res = requests.get(URL, params=params)
+    try:
+        res = requests.get(URL, params=params)
+    except Exception as e:
+        return e
+    
+    if res.status_code == 200:
+        response = res.json()
+    else:
+        print('Ошибка')
+
     response = res.json()
     photos = response['response']['items']
     photos_likes = []
